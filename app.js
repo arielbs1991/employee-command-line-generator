@@ -21,8 +21,19 @@ function teamQuestions() {
     }).then(function ({ choice }) {
         switch (choice) {
             case "Add the Manager":
-                createManager();
-                break;
+                //TODO: control to prevent multiple managers is not working, come back to it
+                let hasManager = employees.includes("Manager")
+                //if true don't run
+                if (hasManager === true) {
+                    console.log("You already have a manager!");
+                    teamQuestions();
+
+                    break;
+                }
+                else {
+                    createManager();
+                    break;
+                }
 
             case "Add an Engineer":
                 createEngineer();
@@ -32,11 +43,18 @@ function teamQuestions() {
                 createIntern();
                 break;
 
-            default:
+            case "Generate Team":
                 console.log("Generating your team page!");
                 console.log(employees);
-                // render(employees);
+                fs.writeFile(outputPath, render(employees), function(err) {
+                    if (err) {
+                            return console.log(err);
+                        }
+                        console.log("Successfully Written TeamPage, check your output folder");
+                })
                 break;
+                default:
+                    break;
         }
     })
 }
@@ -132,10 +150,6 @@ function createIntern() {
 teamQuestions();
 //if (manager !== "") console.log("you already have your manager!") and return to teamQuestions
 //how to check if something is in an array
-const generateTeam = function () {
-
-}
-
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
