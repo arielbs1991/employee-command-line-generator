@@ -12,6 +12,13 @@ const render = require("./lib/htmlRenderer");
 
 const employees = [];
 
+const answerValidator = async (input) => {
+    if (input === ''){
+        console.log('Oh no! Please enter your answer.');
+    }else {
+        return true;
+    }
+}
 function teamQuestions() {
     inquirer.prompt({
         type: "list",
@@ -21,10 +28,8 @@ function teamQuestions() {
     }).then(function ({ choice }) {
         switch (choice) {
             case "Add the Manager":
-                //TODO: control to prevent multiple managers is not working, come back to it
                 let [hasManager] = employees.filter(emp => emp.officeNumber)
                 console.log("do we have a manager?", hasManager);
-                //if true don't run
                 if (hasManager) {
                     console.log("You already have a manager!");
                     teamQuestions();
@@ -45,42 +50,53 @@ function teamQuestions() {
                 break;
 
             case "Generate Team":
-                console.log("Generating your team page!");
-                console.log(employees);
-                fs.writeFile(outputPath, render(employees), function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    console.log("Successfully Written TeamPage, check your output folder");
-                })
-                break;
+                let [hasTeam] = employees.filter(emp => emp.name)
+                console.log("do we have a team", hasTeam)
+                if (hasTeam) {
+                    console.log("Generating your team page!");
+                    console.log(employees);
+                    fs.writeFile(outputPath, render(employees), function (err) {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        console.log("Successfully Written TeamPage, check your output folder");
+                    })
+                    break;
+                } else {
+                    console.log("You don't have anyone on your team! Please add at least one employee.");
+                    teamQuestions();
+                }
             default:
                 break;
         }
     })
 }
 
-function createManager() {
-    inquirer.prompt([
+async function createManager() {
+    await inquirer.prompt([
         {
             type: "input",
             message: "Please enter Manager's name:",
-            name: "name"
+            name: "name",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Manager's ID:",
-            name: "id"
+            name: "id",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Manager's email:",
-            name: "email"
+            name: "email",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Manager's office number",
-            name: "officeNumber"
+            name: "officeNumber",
+            validate: answerValidator
         }
     ]).then(function (answers) {
         const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
@@ -90,27 +106,31 @@ function createManager() {
     })
 }
 
-function createEngineer() {
-    inquirer.prompt([
+async function createEngineer() {
+    await inquirer.prompt([
         {
             type: "input",
             message: "Please enter Engineer's name:",
-            name: "name"
+            name: "name",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Engineer's ID:",
-            name: "id"
+            name: "id",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Engineer's email:",
-            name: "email"
+            name: "email",
+            validate: answerValidator
         },
         {
             type: "input",
             mesage: "Please enter Engineer's github username",
-            name: "github"
+            name: "github",
+            validate: answerValidator
         }
     ]).then(function (answers) {
         const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
@@ -119,27 +139,31 @@ function createEngineer() {
         teamQuestions();
     })
 }
-function createIntern() {
-    inquirer.prompt([
+async function createIntern() {
+    await inquirer.prompt([
         {
             type: "input",
             message: "Please enter Intern's name:",
-            name: "name"
+            name: "name",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Intern's ID:",
-            name: "id"
+            name: "id",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Intern's email:",
-            name: "email"
+            name: "email",
+            validate: answerValidator
         },
         {
             type: "input",
             message: "Please enter Intern's school",
-            name: "school"
+            name: "school",
+            validate: answerValidator
         }
     ]).then(function (answers) {
         const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
