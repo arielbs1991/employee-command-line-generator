@@ -22,9 +22,10 @@ function teamQuestions() {
         switch (choice) {
             case "Add the Manager":
                 //TODO: control to prevent multiple managers is not working, come back to it
-                let hasManager = employees.includes("Manager")
+                let [hasManager] = employees.filter(emp => emp.officeNumber)
+                console.log("do we have a manager?", hasManager);
                 //if true don't run
-                if (hasManager === true) {
+                if (hasManager) {
                     console.log("You already have a manager!");
                     teamQuestions();
 
@@ -46,15 +47,15 @@ function teamQuestions() {
             case "Generate Team":
                 console.log("Generating your team page!");
                 console.log(employees);
-                fs.writeFile(outputPath, render(employees), function(err) {
+                fs.writeFile(outputPath, render(employees), function (err) {
                     if (err) {
-                            return console.log(err);
-                        }
-                        console.log("Successfully Written TeamPage, check your output folder");
+                        return console.log(err);
+                    }
+                    console.log("Successfully Written TeamPage, check your output folder");
                 })
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
     })
 }
