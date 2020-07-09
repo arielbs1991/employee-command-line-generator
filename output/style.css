@@ -1,0 +1,19 @@
+body {
+    background-color: seashell;
+}
+
+.jumbotron {
+    background-color: skyblue;
+}
+
+.engineer-header {
+    background-color: lightpink;
+}
+
+.intern-header {
+background-color: lightgoldenrodyellow;
+}
+
+.manager-header {
+background-color: lightsalmon;
+}
